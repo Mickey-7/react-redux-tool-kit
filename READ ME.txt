@@ -1,0 +1,111 @@
+reference : https://www.youtube.com/watch?v=VfRGyfw7kGY
+
+React Project Setup 
+    Install Axios & Redux Toolkit
+    -> npm install axios @reduxjs/toolkit
+
+    Project Folder Structure
+    -> src
+        -> app
+            - store.js
+        -> features
+            -> cake
+                - CakeView.jsx
+                - cakeSlice.js
+            -> icecream
+                - IcecreamView.jsx
+                - icecreamSlice.js
+            -> user
+                - UserView.jsx
+                - userSlice.js
+
+
+Provider : https://www.youtube.com/watch?v=mqcz_G5-5aQ
+    Need React Store to be available to React Component Tree
+    -> npm install react-redux
+    -> index.js
+        // import provider
+        import { Provider } from "react-redux";
+        // import store
+        import store from "./app/store"
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <React.StrictMode>
+                <Provider store={store}>
+                 <App />
+                </Provider>
+            </React.StrictMode>
+        );
+
+
+useSelector : https://www.youtube.com/watch?v=8PjwMqDMjxI
+    // import useSelector
+    import { useSelector } from "react-redux";
+
+    // useSelector accepts function with state as parameter
+    // the cake is the cakeReducer from the store and
+    // the numberOfCakes is from the cakeSlice
+    const numOfCakes = useSelector((state) => state.cake.numberOfCakes)
+    
+    <h2>Number of cakes - {numOfCakes}</h2>
+
+
+useDispatch : https://www.youtube.com/watch?v=af4N8xJN3iU
+    // import useDispatch
+    import { useDispatch } from "react-redux";
+    // import useDispatch
+    import { useDispatch } from "react-redux";
+    // import action creator from cakeSlice
+    import { ordered, restocked } from "./cakeSlice";
+
+    // useDispatch returns a reference to the redux store
+    const dispatch = useDispatch()
+
+    <button onClick={() => dispatch(ordered())}>Order cake</button>
+    <button onClick={() => dispatch(restocked(5))}>Restock cakes</button>
+        
+
+Redux Devtools : https://www.youtube.com/watch?v=iECBiELxrNE
+    install Redux Devtools chrome extension
+        -> https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
+        -> click Add to Chrome
+        -> open new tab local:3000
+        -> click the Redux Devtools icon and console will appear
+        -> or open devtools and find redux
+
+
+
+Fetching Data : https://www.youtube.com/watch?v=I2aM7YcOXDY
+    // import useEffect
+    import { useEffect } from "react";
+    // import useDispatch
+    import { useDispatch, useSelector } from "react-redux";
+    // import fetcUsers from userSlice
+    import { fetchUsers } from "./userSlice";
+
+    //get data from store to be rendered
+    const user = useSelector(state => state.user)
+    //dispatch an action from userSlice
+    const dispatch = useDispatch()
+    //useEffect - first argument is a function
+    //and run only once so we use [] as dependency
+    useEffect(() => {
+      dispatch(fetchUsers())
+    },[])
+
+    {user.loading && <div>Loading...</div>}
+    {!user.loading && user.error ? <div>Error: {user.error}</div>:null}
+    {!user.loading && user.users.length ?
+        (
+            <ul>
+                {
+                    user.users.map(user => (
+                        <li key={user.id}>{user.name}</li>
+                    ))
+                }
+            </ul>
+        )
+        :
+        null
+    }
+
